@@ -19,13 +19,31 @@ class TestCell: UITableViewCell {
             }
         })
     }
+
+    func configure(with text: String) {
+        textLabel?.text = text
+    }
 }
 
 class ViewController: UIViewController {
+    var data = [
+        "Ячейка",
+        "Ячейка",
+        "Ячейка",
+        "Ячейка",
+        "Ячейка",
+        "Ячейка",
+        "Ячейка",
+        "Ячейка",
+        "Ячейка",
+        "Ячейка"
+    ]
+
     lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(TestCell.self, forCellReuseIdentifier: "\(TestCell.self)")
         tableView.dataSource = self
+        tableView.delegate = self
         return tableView
     }()
     override func viewDidLoad() {
@@ -42,12 +60,23 @@ class ViewController: UIViewController {
 
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        10
+        data.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "\(TestCell.self)", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "\(TestCell.self)", for: indexPath) as! TestCell
+        cell.configure(with: data[indexPath.row])
         cell.selectionStyle = .none
         return cell
+    }
+}
+
+extension ViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        if data[indexPath.row] != "Перезагрузка" {
+            data[indexPath.row] = "Перезагрузка"
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+        }
     }
 }
